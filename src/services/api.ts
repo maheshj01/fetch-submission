@@ -18,30 +18,30 @@ export const logout = async () => {
 
 export const getBreeds = async (): Promise<string[]> => {
     const response = await api.get('/dogs/breeds');
-    return response.data;
+    return response.data as string[];
 };
 
 export const searchDogs = async (params: SearchParams): Promise<SearchResponse> => {
     const response = await api.get('/dogs/search', { params });
-    return response.data;
+    return response.data as SearchResponse;
 };
 
 export const getDogs = async (dogIds: string[]): Promise<Dog[]> => {
     const response = await api.post('/dogs', dogIds);
-    return response.data;
+    return response.data as Dog[];
 };
 
 export const getMatch = async (dogIds: string[]): Promise<Match> => {
     const response = await api.post('/dogs/match', dogIds);
-    return response.data;
+    return response.data as Match;
 };
 
 export const getLocations = async (zipCodes: string[]): Promise<Location[]> => {
     const response = await api.post('/locations', zipCodes);
-    return response.data;
+    return response.data as Location[];
 };
 
-export const searchLocations = async (params: any): Promise<{ results: Location[]; total: number }> => {
+export const searchLocations = async (params: SearchParams): Promise<{ results: Location[]; total: number }> => {
     const response = await api.post('/locations/search', params);
-    return response.data;
+    return response.data as { results: Location[]; total: number };
 }; 
