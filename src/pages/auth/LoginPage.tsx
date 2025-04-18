@@ -80,7 +80,7 @@ const LoginPage = () => {
 
                     <Button
                         type="submit"
-                        className="w-full text-white font-bold py-3 px-4 rounded-xl transition-colors duration-200 outline-amber-400">
+                        className="w-full text-white font-bold py-3 px-4 rounded-xl transition-colors duration-200">
                         Login
                     </Button>
                 </form>
