@@ -16,14 +16,24 @@ export default function PageIndicator() {
         <div className="mx-auto px-4 py-6 flex flex-row justify-between max-w-md gap-4 items-center">
             <FSelect
                 className="min-w-16 w-32"
-                label="Filter by" options={['breed', 'name', 'age']} value={filter} onChange={(x: string) => {
-                    console.log(x);
+                label="Filter by" options={
+                    [
+                        { label: 'Breed', value: 'breed' },
+                        { label: 'Name', value: 'name' },
+                        { label: 'Age', value: 'age' }
+                    ]
+                } value={filter} onChange={(x: string) => {
                     dispatch(setFilter(x));
                 }} />
 
             <FSelect
                 className="min-w-16 w-32"
-                label="Sort" options={['asc', 'desc']} value={sort} onChange={(s: string) => {
+                label="Sort" options={
+                    [
+                        { label: 'Ascending', value: 'asc' },
+                        { label: 'Descending', value: 'desc' }
+                    ]
+                } value={sort} onChange={(s: string) => {
                     dispatch(setSort(s));
                 }} />
             <div className="flex flex-row gap-4 items-center">

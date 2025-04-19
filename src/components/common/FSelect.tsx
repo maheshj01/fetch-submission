@@ -8,9 +8,14 @@ import {
     SelectValue,
 } from "../../components/ui/select"
 
+interface Option {
+    label: string;
+    value: string;
+}
+
 interface FSelectProps {
     label: string;
-    options: string[];
+    options: Option[];
     value: string;
     className?: string;
     onChange: (value: string) => void;
@@ -20,8 +25,7 @@ export default function FSelect({ label, options, value, onChange, className }: 
     return (
         <Select
             value={value}
-            onValueChange={onChange}
-        >
+            onValueChange={onChange}>
             <SelectTrigger className={className}>
                 <SelectValue placeholder={label} />
             </SelectTrigger>
@@ -31,8 +35,7 @@ export default function FSelect({ label, options, value, onChange, className }: 
                 <SelectGroup>
                     <SelectLabel>{label}</SelectLabel>
                     {options.map((option) => (
-                        <SelectItem key={option} value={option}>{option}</SelectItem>
-                        // <SelectItem value="apple">Apple</SelectItem>
+                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
                     ))}
                 </SelectGroup>
             </SelectContent>
