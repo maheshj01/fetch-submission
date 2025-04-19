@@ -31,7 +31,7 @@ const DogsPage = () => {
     }
 
     return (
-        <div className='w-screen min-h-screen pb-8 flex flex-col bg-amber-50'>
+        <div className='w-auto min-w-screen min-h-screen pb-8 flex flex-col bg-amber-50 mx-0'>
             <FetchNavbar
                 className='bg-amber-100'
                 navbarTitle='We Love Dogs!'>
@@ -46,7 +46,7 @@ const DogsPage = () => {
                     </IconButton>
                 </div>
             </FetchNavbar>
-            <div className="container mx-auto px-4 py-6 flex flex-col items-center overflow-y-auto max-h-[calc(100vh-10rem)]">
+            <div className="container px-4 py-6 flex flex-col items-center overflow-y-auto max-h-[calc(100vh-10rem)]">
                 {loading && (
                     <div className="flex flex-grow flex-col items-center justify-center w-full h-screen">
                         <p className="text-white">Loading...</p>

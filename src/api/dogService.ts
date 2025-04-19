@@ -30,7 +30,6 @@ class DogService {
 
     async getDogsByIds(dogIds: string[]) {
         const response = await api.post('/dogs', dogIds);
-        console.log("dogs", response.data);
         return response.data;
     };
 
