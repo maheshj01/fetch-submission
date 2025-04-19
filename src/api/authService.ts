@@ -5,8 +5,24 @@ import api from './apiClient';
 class AuthService {
     async login(credentials: LoginCredentials) {
         try {
-            const response = await api.post('/auth/login', credentials);
-            return response.status === 200;
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(credentials),
+                credentials: 'include',
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData?.message || 'Invalid credentials. Please try again.');
+            }
+
+            return {
+                name: credentials.name,
+                email: credentials.email,
+            };
         } catch (error) {
             console.error('Login failed:', error);
             throw error;

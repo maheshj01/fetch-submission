@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { LoginCredentials } from '../../types/types';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks/useAppDispatch';
+import { loginSuccess } from '../../store/slices/authSlice';
+import authService from '../../api/authService';
 
 const LoginPage = () => {
     const [error, setError] = useState<string>('');
@@ -10,27 +14,32 @@ const LoginPage = () => {
         email: '',
     });
 
+    const dispatch = useAppDispatch();
+
+    const navigate = useNavigate();
+
     const handleSubmit = async (e: React.FormEvent) => {
-        console.log(credentials);
         e.preventDefault();
         setError('');
         try {
-
-        } catch {
-            setError('Invalid credentials. Please try again.');
+            const userData = await authService.login(credentials);
+            dispatch(loginSuccess(userData));
+            navigate('/dogs');
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'An error occurred. Please try again.');
         }
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setCredentials(prev => ({
+        setCredentials((prev) => ({
             ...prev,
-            [name]: value
+            [name]: value,
         }));
     };
 
     return (
-        <div className="min-h-screen flex w-screen items-center justify-center">
+        <div className="min-h-screen flex w-screen items-center justify-center bg-secondary">
             <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md mx-4">
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-[#1cb0f6] mb-2">Welcome!</h1>
@@ -80,7 +89,7 @@ const LoginPage = () => {
 
                     <Button
                         type="submit"
-                        className="w-full text-white font-bold py-3 px-4 rounded-xl transition-colors duration-200">
+                        className="w-full text-white  font-bold py-3 px-4 rounded-xl transition-colors duration-200">
                         Login
                     </Button>
                 </form>
