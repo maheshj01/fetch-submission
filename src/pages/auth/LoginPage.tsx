@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { LoginCredentials } from '../../types/types';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
-import { loginSuccess } from '../../store/slices/authSlice';
+import { loginInit, loginSuccess } from '../../store/slices/authSlice';
 import { ROUTES } from '../../routes/routes';
 import { Button } from '../../components/ui/button';
 import { Input } from 'src/components/ui/input';
 import authService from 'src/api/authService';
+import { useAppSelector } from 'src/hooks/useAppSelector';
 
 const LoginPage = () => {
     const [error, setError] = useState<string>('');
@@ -18,9 +19,12 @@ const LoginPage = () => {
     const dispatch = useAppDispatch();
 
     const navigate = useNavigate();
-
+    const isLoading = useAppSelector(
+        (state) => state.auth.isLoading
+    );
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        dispatch(loginInit());
         setError('');
         try {
             const userData = await authService.login(credentials);
@@ -41,9 +45,9 @@ const LoginPage = () => {
 
     return (
         <div className="min-h-screen flex w-screen items-center justify-center bg-gradient-to-br from-amber-200 to-amber-600">
-            <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md mx-4 bg-gradient-to-r from-slate-100 to-slate-200">
+            <div className="p-8 rounded-2xl shadow-2xl w-full max-w-md mx-4 bg-gradient-to-tr from-amber-50 to-amber-100">
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-blue-500 mb-2">Welcome!</h1>
+                    <h1 className="text-4xl font-bold text-amber-900 mb-2">Welcome!</h1>
                     <p className="text-gray-600 text-md">
                         Let's find your perfect furry friend
                     </p>
@@ -93,7 +97,7 @@ const LoginPage = () => {
                     <Button
                         type="submit"
                         className="w-full text-white font-bold py-3 px-4 rounded-lg transition-colors duration-200">
-                        Login
+                        {isLoading ? 'Logging in...' : 'Login'}
                     </Button>
                 </form>
             </div>

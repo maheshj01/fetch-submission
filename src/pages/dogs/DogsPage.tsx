@@ -17,11 +17,15 @@ const DogsPage = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
-
+    const [page, setPage] = useState<number>(0);
+    const [pageSize, setPageSize] = useState<number>(10);
     useEffect(() => {
         const loadDogBreeds = async () => {
             try {
-                const dogs = await dogService.searchDogs({});
+                const dogs = await dogService.searchDogs({
+                    from: page * pageSize,
+                    size: pageSize,
+                });
                 setDogBreeds(dogs.data.resultIds as string[]);
             } catch (err) {
                 setError('There was an error fetching the dog breeds');
