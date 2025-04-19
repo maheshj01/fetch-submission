@@ -24,15 +24,19 @@ class DogService {
         from?: number,
         sort?: string // e.g., "breed:asc"
     }) {
-        return api.get('/dogs/search', { params });
+        const response = await api.get('/dogs/search', { params });
+        return response.data;
     };
 
     async getDogsByIds(dogIds: string[]) {
-        return api.post('/dogs', dogIds);
+        const response = await api.post('/dogs', dogIds);
+        console.log("dogs", response.data);
+        return response.data;
     };
 
     async getDogMatch(dogIds: string[]) {
-        return api.post<{ match: string }>('/dogs/match', dogIds);
+        const response = await api.post<{ match: string }>('/dogs/match', dogIds);
+        return response.data;
     };
 }
 

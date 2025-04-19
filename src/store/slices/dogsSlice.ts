@@ -1,8 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import dogService from '../../api/dogService';
+import { Dog } from '@/src/types/types';
 
 interface DogsState {
     breeds: string[];
+    dogs: Dog[];
     loading: boolean;
     error: string | null;
     page: number;
@@ -14,6 +16,7 @@ interface DogsState {
 
 const initialState: DogsState = {
     breeds: [],
+    dogs: [],
     loading: false,
     error: null,
     page: 0,
@@ -27,14 +30,16 @@ export const fetchDogs = createAsyncThunk(
     'dogs/fetchDogs',
     async ({ page, pageSize, sort, filter }: { page: number; pageSize: number, sort: string, filter: string }, { rejectWithValue }) => {
         try {
-            const response = await dogService.searchDogs({
+            const searchData = await dogService.searchDogs({
                 from: page * pageSize,
                 size: pageSize,
                 sort: `${filter}:${sort}`
             });
+            const dogsData = await dogService.getDogsByIds(searchData.resultIds);
             return {
-                breeds: response.data.resultIds as string[],
-                totalResults: response.data.total,
+                breeds: searchData.resultIds,
+                totalResults: searchData.total,
+                dogs: dogsData
             };
         } catch (error) {
             return rejectWithValue('Failed to fetch dogs');
@@ -60,7 +65,6 @@ const dogsSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-
         builder
             .addCase(fetchDogs.pending, (state) => {
                 state.loading = true;
@@ -70,6 +74,7 @@ const dogsSlice = createSlice({
                 state.loading = false;
                 state.breeds = action.payload.breeds;
                 state.totalResults = action.payload.totalResults;
+                state.dogs = action.payload.dogs;
             })
             .addCase(fetchDogs.rejected, (state, action) => {
                 state.loading = false;
