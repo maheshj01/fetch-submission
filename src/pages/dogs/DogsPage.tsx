@@ -4,7 +4,7 @@ import { AppDispatch, RootState } from '../../store';
 import { fetchDogs, setFilter, setPage } from '../../store/slices/dogsSlice';
 import FetchNavbar from '../../components/common/Navbar';
 import IconButton from '../../components/common/IconButton';
-import { IoExitOutline, IoGridOutline, IoListOutline } from "react-icons/io5";
+import { IoExitOutline, IoGridOutline, IoListOutline, IoLogoGithub } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
 import PageIndicator from '../../components/common/PageIndicator';
@@ -79,6 +79,11 @@ const DogsPage = () => {
                     </IconButton>
                     <IconButton onClick={handleLogout} ariaLabel="Logout">
                         <IoExitOutline size={24} />
+                    </IconButton>
+                    <IconButton onClick={() => {
+                        window.open('https://github.com/maheshj01/fetch-submission', '_blank');
+                    }} ariaLabel="Github">
+                        <IoLogoGithub className="text-2xl" />
                     </IconButton>
                 </div>
             </FetchNavbar>

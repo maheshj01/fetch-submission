@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { IoLogoGithub } from "react-icons/io5";
 interface FetchNavbarProps {
     className?: string;
     navbarTitle?: string;
@@ -7,7 +8,7 @@ interface FetchNavbarProps {
 }
 const FetchNavbar: React.FC<FetchNavbarProps> = ({ className, navbarTitle, children, onNavbarIconClick }) => {
     return (
-        <div className={`bg-background px-16 sticky top-0 z-50 w-full h-16 flex justify-between items-center ${className}`}>
+        <div className={`bg-background px-8 sticky top-0 z-50 w-full h-16 flex justify-between items-center ${className}`}>
             <div className='flex space-x-20'>
                 {/* appbar content */}
                 <div className='flex grow items-center'>
