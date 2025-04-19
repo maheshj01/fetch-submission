@@ -16,7 +16,8 @@ const IconButton: React.FC<IconButtonProps> = ({ onClick, children, ariaLabel, c
         <TooltipTrigger>
           <div
             aria-label={ariaLabel}
-            className={`rounded-full p-2 dark:text-white ${className}`}
+            className={`rounded-full p-2 flex items-center justify-center dark:text-white hover:bg-amber-100 animate-all duration-200  ${className}
+              `}
             onClick={onClick}>
             {children}
           </div>

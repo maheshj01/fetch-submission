@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
-import dogService from '../../api/dogService';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store';
+import { fetchDogs, setPage } from '../../store/slices/dogsSlice';
 import FetchNavbar from '../../components/common/Navbar';
 import IconButton from '../../components/common/IconButton';
 import { IoChevronBackOutline, IoChevronForwardOutline, IoExitOutline } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
-import { ROUTES } from 'src/routes/routes';
+import { ROUTES } from '../../routes/routes';
 
 const DogCard = ({ breed }: { breed: string }) => (
     <div className="bg-white rounded-md shadow-md px-4 py-3 w-full max-w-md mb-4">
@@ -13,37 +15,18 @@ const DogCard = ({ breed }: { breed: string }) => (
 );
 
 const DogsPage = () => {
-    const [dogBreeds, setDogBreeds] = useState<string[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+    const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
-    const [page, setPage] = useState<number>(0);
-    const [pageSize, setPageSize] = useState<number>(25);
-    // the total number of results for the query (not just the current page)
-    const [totalResults, setTotalResults] = useState<number>(0);
+    const { breeds, loading, error, page, pageSize, totalResults } = useSelector((state: RootState) => state.dogs);
+
     useEffect(() => {
-        const loadDogBreeds = async () => {
-            try {
-                const dogs = await dogService.searchDogs({
-                    from: page * pageSize,
-                    size: pageSize,
-                });
-                setDogBreeds(dogs.data.resultIds as string[]);
-                console.log(dogs.data.total);
-                setTotalResults(dogs.data.total);
-            } catch (err) {
-                setError('There was an error fetching the dog breeds');
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadDogBreeds();
-    }, [page, pageSize]);
+        dispatch(fetchDogs({ page, pageSize }));
+    }, [dispatch, page, pageSize]);
 
     return (
-        <div className='w-screen min-h-screen pb-8 flex flex-col'>
+        <div className='w-screen min-h-screen pb-8 flex flex-col bg-amber-50'>
             <FetchNavbar
-                className='bg-amber-50 '
+                className='bg-amber-100 '
                 navbarTitle='We Love Dogs!'
                 navbarIcon={
                     <IconButton onClick={() => navigate(ROUTES.LOGIN)} ariaLabel="Logout">
@@ -52,39 +35,43 @@ const DogsPage = () => {
                 }
             />
             <div className="container mx-auto px-4 py-6 flex flex-col items-center overflow-y-auto max-h-[calc(100vh-10rem)]">
-                {loading &&
+                {loading && (
                     <div className="flex flex-grow flex-col items-center justify-center w-full h-screen">
                         <p className="text-white">Loading...</p>
                     </div>
-                }
+                )}
 
-                {error &&
+                {error && (
                     <div className="flex flex-grow flex-col items-center justify-center w-full h-screen">
                         <p className="text-red-300">{error}</p>
                     </div>
-                }
-                {!loading && !error && (
-                    dogBreeds.map((breed, index) => <DogCard key={index} breed={breed} />)
                 )}
+                {!loading && !error && breeds.map((breed, index) => (
+                    <DogCard key={index} breed={breed} />
+                ))}
             </div>
             <div className="container mx-auto px-4 py-6 flex flex-row justify-between max-w-md items-center">
                 <IconButton
                     ariaLabel="Previous Page"
                     onClick={() => {
                         if (page > 0) {
-                            setPage(page - 1);
+                            dispatch(setPage(page - 1));
                         }
                     }}>
                     <IoChevronBackOutline size={24} />
                 </IconButton>
                 <p className="text-sm text-gray-500">
-                    {page * pageSize} of {totalResults}
+                    {page * pageSize} - {page * pageSize + pageSize} of
+
+                    {totalResults}
                 </p>
-                <IconButton ariaLabel="Next Page" onClick={() => {
-                    if (page * pageSize < totalResults) {
-                        setPage(page + 1);
-                    }
-                }}>
+                <IconButton
+                    ariaLabel="Next Page"
+                    onClick={() => {
+                        if (page * pageSize < totalResults) {
+                            dispatch(setPage(page + 1));
+                        }
+                    }}>
                     <IoChevronForwardOutline size={24} />
                 </IconButton>
             </div>
