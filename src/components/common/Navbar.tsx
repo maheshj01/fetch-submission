@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 interface FetchNavbarProps {
     className?: string;
     navbarTitle?: string;
-    navbarIcon?: React.ReactNode;
+    children?: React.ReactNode;
     onNavbarIconClick?: () => void;
 }
-const FetchNavbar: React.FC<FetchNavbarProps> = ({ navbarIcon, className, navbarTitle, onNavbarIconClick }) => {
+const FetchNavbar: React.FC<FetchNavbarProps> = ({ className, navbarTitle, children, onNavbarIconClick }) => {
     return (
         <div className={`bg-background px-16 sticky top-0 z-50 w-full h-16 flex justify-between items-center ${className}`}>
             <div className='flex space-x-20'>
@@ -23,7 +23,7 @@ const FetchNavbar: React.FC<FetchNavbarProps> = ({ navbarIcon, className, navbar
                 </div>
             </div>
             <div className='flex' />
-            {navbarIcon}
+            {children}
         </div>
     )
 }
