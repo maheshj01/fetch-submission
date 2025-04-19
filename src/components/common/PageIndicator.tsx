@@ -48,7 +48,7 @@ export default function PageIndicator() {
                 </IconButton>
                 <p className="text-sm text-gray-500">
                     {page * pageSize} - {page * pageSize + pageSize} of
-
+                    &nbsp;
                     {totalResults}
                 </p>
                 <IconButton

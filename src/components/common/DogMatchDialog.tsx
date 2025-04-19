@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Dog } from "src/types/types";
 import Confetti from 'react-confetti';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface DogMatchDialogProps {
     isOpen: boolean;
@@ -11,11 +11,19 @@ interface DogMatchDialogProps {
 
 const DogMatchDialog = ({ isOpen, onClose, matchedDog }: DogMatchDialogProps) => {
     const [showConfetti, setShowConfetti] = useState(false);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
         if (isOpen) {
             setShowConfetti(true);
-            const timer = setTimeout(() => setShowConfetti(false), 5000); // Stop confetti after 5 seconds
+            // Play bark sound
+            if (audioRef.current) {
+                audioRef.current.currentTime = 0; // Reset audio to start
+                audioRef.current.play().catch(error => {
+                    console.warn('Audio playback failed:', error);
+                });
+            }
+            const timer = setTimeout(() => setShowConfetti(false), 5000);
             return () => clearTimeout(timer);
         }
     }, [isOpen]);
@@ -24,6 +32,11 @@ const DogMatchDialog = ({ isOpen, onClose, matchedDog }: DogMatchDialogProps) =>
 
     return (
         <>
+            <audio
+                ref={audioRef}
+                src="/sounds/bark.mp3"
+                preload="auto"
+            />
             <Dialog open={isOpen} onOpenChange={onClose}>
                 <DialogContent className="max-w-md">
                     {showConfetti && (
