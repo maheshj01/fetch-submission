@@ -11,12 +11,23 @@ import PageIndicator from '../../components/common/PageIndicator';
 import authService from 'src/api/authService';
 import DogListCard from 'src/components/common/DogListCard';
 import DogGridCard from 'src/components/common/DogGridCard';
+import { useAppSelector } from 'src/hooks/useAppSelector';
+import { Button } from 'src/components/ui/button';
+import { clearFavorites } from 'src/store/slices/favoritesSlice';
+import dogService from 'src/api/dogService';
+import DogMatchDialog from 'src/components/common/DogMatchDialog';
+import { Dog } from 'src/types/types';
 
 const DogsPage = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const { dogs, loading, error, page, pageSize, sort, filter } = useSelector((state: RootState) => state.dogs);
+    const favorites = useAppSelector((state: RootState) => state.favorites.dogs);
     const [view, setView] = useState<'grid' | 'list'>('grid');
+    const [isMatchDialogOpen, setIsMatchDialogOpen] = useState(false);
+    const [matchedDog, setMatchedDog] = useState<Dog | undefined>();
+    const [matchLoading, setMatchLoading] = useState(false);
+
     useEffect(() => {
         dispatch(fetchDogs({ page, pageSize, sort, filter }));
     }, [dispatch, page, pageSize, filter, sort]);
@@ -27,7 +38,23 @@ const DogsPage = () => {
 
     const handleLogout = async () => {
         await authService.logout();
+        dispatch(clearFavorites());
         navigate(ROUTES.LOGIN);
+    }
+
+    const matchDogs = async () => {
+        try {
+            setMatchLoading(true);
+            const favIds = favorites.map((dog) => dog.id);
+            const matchedDog = await dogService.getDogMatch(favIds);
+            const dogResponse = await dogService.getDogsByIds([matchedDog.match]);
+            setMatchedDog(dogResponse[0]);
+            setIsMatchDialogOpen(true);
+        } catch (error) {
+            console.error('Error matching dogs:', error);
+        } finally {
+            setMatchLoading(false);
+        }
     }
 
     return (
@@ -36,10 +63,19 @@ const DogsPage = () => {
                 className='bg-amber-100'
                 navbarTitle='We Love Dogs!'>
                 <div className='flex space-x-2'>
+                    {favorites.length > 0 && (
+                        <Button
+                            size={'lg'}
+                            className='bg-gradient-to-r from-amber-500 to-amber-800 text-white hover:bg-amber-800 hover:scale-105 transition-all duration-300'
+                            onClick={matchDogs}
+                            disabled={matchLoading}
+                        >
+                            {matchLoading ? 'Matching...' : `Match (${favorites.length})`}
+                        </Button>
+                    )}
+
                     <IconButton onClick={handleViewChange} ariaLabel="Grid View">
-                        {
-                            view === 'grid' ? <IoGridOutline size={24} /> : <IoListOutline size={24} />
-                        }
+                        {view === 'grid' ? <IoGridOutline size={24} /> : <IoListOutline size={24} />}
                     </IconButton>
                     <IconButton onClick={handleLogout} ariaLabel="Logout">
                         <IoExitOutline size={24} />
@@ -77,7 +113,13 @@ const DogsPage = () => {
                 )}
             </div>
             <PageIndicator />
+            <DogMatchDialog
+                isOpen={isMatchDialogOpen}
+                onClose={() => setIsMatchDialogOpen(false)}
+                matchedDog={matchedDog}
+            />
         </div>
     );
 };
+
 export default DogsPage;
