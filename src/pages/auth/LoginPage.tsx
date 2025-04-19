@@ -47,7 +47,7 @@ const LoginPage = () => {
         <div className="min-h-screen flex w-screen items-center justify-center bg-gradient-to-br from-amber-200 to-amber-600">
             <div className="p-8 rounded-2xl shadow-2xl w-full max-w-md mx-4 bg-gradient-to-tr from-amber-50 to-amber-100">
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-amber-900 mb-2">Welcome!</h1>
+                    <h1 className="text-4xl font-bold text-amber-900 mb-2">Login</h1>
                     <p className="text-gray-600 text-md">
                         Let's find your perfect furry friend
                     </p>
