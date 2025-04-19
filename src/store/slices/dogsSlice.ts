@@ -8,6 +8,8 @@ interface DogsState {
     page: number;
     pageSize: number;
     totalResults: number;
+    sort: 'asc' | 'desc';
+    filter: 'breed' | 'name' | 'age';
 }
 
 const initialState: DogsState = {
@@ -16,16 +18,19 @@ const initialState: DogsState = {
     error: null,
     page: 0,
     pageSize: 25,
+    sort: 'asc',
     totalResults: 0,
+    filter: 'breed',
 };
 
 export const fetchDogs = createAsyncThunk(
     'dogs/fetchDogs',
-    async ({ page, pageSize }: { page: number; pageSize: number }, { rejectWithValue }) => {
+    async ({ page, pageSize, sort, filter }: { page: number; pageSize: number, sort: string, filter: string }, { rejectWithValue }) => {
         try {
             const response = await dogService.searchDogs({
                 from: page * pageSize,
                 size: pageSize,
+                sort: `${filter}:${sort}`
             });
             return {
                 breeds: response.data.resultIds as string[],
@@ -47,8 +52,15 @@ const dogsSlice = createSlice({
         setPageSize: (state, action) => {
             state.pageSize = action.payload;
         },
+        setSort: (state, action) => {
+            state.sort = action.payload;
+        },
+        setFilter: (state, action) => {
+            state.filter = action.payload;
+        },
     },
     extraReducers: (builder) => {
+
         builder
             .addCase(fetchDogs.pending, (state) => {
                 state.loading = true;
@@ -66,5 +78,5 @@ const dogsSlice = createSlice({
     },
 });
 
-export const { setPage, setPageSize } = dogsSlice.actions;
-export default dogsSlice.reducer; 
+export const { setPage, setPageSize, setSort, setFilter } = dogsSlice.actions;
+export default dogsSlice.reducer;

@@ -1,12 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store';
-import { fetchDogs, setPage } from '../../store/slices/dogsSlice';
+import { fetchDogs, setFilter, setPage } from '../../store/slices/dogsSlice';
 import FetchNavbar from '../../components/common/Navbar';
 import IconButton from '../../components/common/IconButton';
-import { IoChevronBackOutline, IoChevronForwardOutline, IoExitOutline } from "react-icons/io5";
+import { IoExitOutline } from "react-icons/io5";
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../routes/routes';
+import PageIndicator from 'src/components/common/PageIndicator';
 
 const DogCard = ({ breed }: { breed: string }) => (
     <div className="bg-white rounded-md shadow-md px-4 py-3 w-full max-w-md mb-4">
@@ -17,11 +18,10 @@ const DogCard = ({ breed }: { breed: string }) => (
 const DogsPage = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
-    const { breeds, loading, error, page, pageSize, totalResults } = useSelector((state: RootState) => state.dogs);
-
+    const { breeds, loading, error, page, pageSize, totalResults, sort, filter } = useSelector((state: RootState) => state.dogs);
     useEffect(() => {
-        dispatch(fetchDogs({ page, pageSize }));
-    }, [dispatch, page, pageSize]);
+        dispatch(fetchDogs({ page, pageSize, sort, filter }));
+    }, [dispatch, page, pageSize, filter, sort]);
 
     return (
         <div className='w-screen min-h-screen pb-8 flex flex-col bg-amber-50'>
@@ -50,31 +50,7 @@ const DogsPage = () => {
                     <DogCard key={index} breed={breed} />
                 ))}
             </div>
-            <div className="container mx-auto px-4 py-6 flex flex-row justify-between max-w-md items-center">
-                <IconButton
-                    ariaLabel="Previous Page"
-                    onClick={() => {
-                        if (page > 0) {
-                            dispatch(setPage(page - 1));
-                        }
-                    }}>
-                    <IoChevronBackOutline size={24} />
-                </IconButton>
-                <p className="text-sm text-gray-500">
-                    {page * pageSize} - {page * pageSize + pageSize} of
-
-                    {totalResults}
-                </p>
-                <IconButton
-                    ariaLabel="Next Page"
-                    onClick={() => {
-                        if (page * pageSize < totalResults) {
-                            dispatch(setPage(page + 1));
-                        }
-                    }}>
-                    <IoChevronForwardOutline size={24} />
-                </IconButton>
-            </div>
+            <PageIndicator />
         </div>
     );
 };
