@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { LoginCredentials } from '../../types/types';
-import { Button } from '../../components/ui/button';
-import { Input } from '../../components/ui/input';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/useAppDispatch';
 import { loginSuccess } from '../../store/slices/authSlice';
-import authService from '../../api/authService';
+import { ROUTES } from '../../routes/routes';
+import { Button } from '../../components/ui/button';
+import { Input } from 'src/components/ui/input';
+import authService from 'src/api/authService';
 
 const LoginPage = () => {
     const [error, setError] = useState<string>('');
@@ -24,7 +25,7 @@ const LoginPage = () => {
         try {
             const userData = await authService.login(credentials);
             dispatch(loginSuccess(userData));
-            navigate('/dogs');
+            navigate(ROUTES.DOGS);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred. Please try again.');
         }
@@ -39,7 +40,7 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="min-h-screen flex w-screen items-center justify-center bg-secondary">
+        <div className="min-h-screen flex w-screen items-center justify-center linear-gradient-to-r from-blue-500 to-blue-600">
             <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md mx-4">
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-[#1cb0f6] mb-2">Welcome!</h1>
@@ -89,7 +90,7 @@ const LoginPage = () => {
 
                     <Button
                         type="submit"
-                        className="w-full text-white  font-bold py-3 px-4 rounded-xl transition-colors duration-200">
+                        className="w-full text-black font-bold py-3 px-4 rounded-xl transition-colors duration-200">
                         Login
                     </Button>
                 </form>

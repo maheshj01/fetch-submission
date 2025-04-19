@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Box, Typography, CircularProgress, List, ListItem, ListItemText } from '@mui/material';
 import dogService from '../../api/dogService';
+import FetchNavbar from '../../components/common/Navbar';
+import IconButton from '../../components/common/IconButton';
+import { IoExitOutline } from "react-icons/io5";
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from 'src/routes/routes';
 const DogsPage = () => {
     const [dogBreeds, setDogBreeds] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const loadDogBreeds = async () => {
             try {
@@ -21,25 +25,35 @@ const DogsPage = () => {
     }, []);
 
     return (
-        <Box sx={{ p: 3 }}>
-            <Typography variant="h4" component="h1" gutterBottom>
-                Available Dogs
-            </Typography>
-
-            {loading ? (
-                <CircularProgress />
-            ) : error ? (
-                <Typography color="error">{error}</Typography>
-            ) : (
-                <List>
-                    {dogBreeds.map((breed, index) => (
-                        <ListItem key={index}>
-                            <ListItemText primary={breed} />
-                        </ListItem>
-                    ))}
-                </List>
-            )}
-        </Box>
+        <div className='w-screen h-screen'>
+            <FetchNavbar
+                className='bg-slate-100'
+                navbarTitle='Available Dogs'
+                navbarIcon={
+                    <IconButton onClick={() => {
+                        navigate(ROUTES.LOGIN);
+                    }} ariaLabel="Logout">
+                        <IoExitOutline size={24} />
+                    </IconButton>
+                }
+            />
+            < div className="flex flex-col items-center justify-center h-full" >
+                {
+                    loading ? (
+                        <p> Loading...</p >
+                    ) : error ? (
+                        <p>{error}</p>
+                    ) : (
+                        <ul>
+                            {dogBreeds.map((breed, index) => (
+                                <li key={index} className="py-2 px-4 border-b">
+                                    {breed}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+            </div >
+        </div >
     );
 };
 
