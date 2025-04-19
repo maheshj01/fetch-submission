@@ -40,11 +40,13 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="min-h-screen flex w-screen items-center justify-center linear-gradient-to-r from-blue-500 to-blue-600">
-            <div className="bg-white p-8 rounded-3xl shadow-xl w-full max-w-md mx-4">
+        <div className="min-h-screen flex w-screen items-center justify-center bg-gradient-to-br from-amber-200 to-amber-600">
+            <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md mx-4 bg-gradient-to-r from-slate-100 to-slate-200">
                 <div className="text-center mb-8">
-                    <h1 className="text-4xl font-bold text-[#1cb0f6] mb-2">Welcome!</h1>
-                    <p className="text-gray-600">Let's find your perfect furry friend</p>
+                    <h1 className="text-4xl font-bold text-blue-500 mb-2">Welcome!</h1>
+                    <p className="text-gray-600 text-md">
+                        Let's find your perfect furry friend
+                    </p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -59,7 +61,7 @@ const LoginPage = () => {
                                 type="text"
                                 value={credentials.name}
                                 onChange={handleChange}
-                                className="w-full rounded-xl border-black"
+                                className="w-full rounded-lg border-black"
                                 placeholder="Enter your name"
                                 required
                             />
@@ -75,7 +77,7 @@ const LoginPage = () => {
                                 type="email"
                                 value={credentials.email}
                                 onChange={handleChange}
-                                className="w-full rounded-xl"
+                                className="w-full rounded-lg border-black"
                                 placeholder="Enter your email"
                                 required
                             />
@@ -90,7 +92,7 @@ const LoginPage = () => {
 
                     <Button
                         type="submit"
-                        className="w-full text-black font-bold py-3 px-4 rounded-xl transition-colors duration-200">
+                        className="w-full text-white font-bold py-3 px-4 rounded-lg transition-colors duration-200">
                         Login
                     </Button>
                 </form>
